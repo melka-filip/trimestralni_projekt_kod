@@ -1,0 +1,127 @@
+﻿@page "/"
+
+@page "/rezistory"
+
+@inherits TrimestralniProjektMelka.IndexBase
+
+<div class="main-container">
+
+    <div class="rezistory">
+        <i class="fas fa-tools"></i>
+    </div>
+
+    <div class="napeti-proud">
+        <h1>U = @Napeti V</h1>
+        <h1>I = @Proud A</h1>
+        <input type="range" min="1" max="100" value="@Napeti" @oninput="ZmenaNapeti" />
+    </div>
+
+    <div class="odpory">
+        <div class="odpory-card">
+
+            <h1>R = @Odpor Ω</h1>
+
+            <h3>@TypyZapojeni[Zapojeni] Zapojení</h3>
+            <button @onclick="ZmenaZapojeni">Změnit na @TypyZapojeni[Math.Abs(Zapojeni - 1)]</button>
+
+            @for (int i = 0; i < Rezistory.Count; i++)
+            {
+                int local = i;
+                <Rezistor @bind-Value="Rezistory[local]" Index="i" ZmenaOdporu="@Vypocet" OdebratRezistor="Odebrat"></Rezistor>
+            }
+
+            <p>@Rezistory.Count / 5</p>
+            <button id="add-button" @onclick="Pridat"><i class="fas fa-plus-circle"></i></button>
+
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    int Napeti = 20;
+    double Proud = 1;
+    double Odpor = 20;
+    List<int> Rezistory = new List<int>()
+    {
+        10,
+        10,
+    };
+
+    string[] TypyZapojeni = new string[] { "Sériové","Paralelní" };
+    int Zapojeni = 0;
+
+    // změna typu zapojení
+    private void ZmenaZapojeni()
+    {
+        Zapojeni = Math.Abs(Zapojeni - 1);
+        Vypocet();
+    }
+
+    // změna napětí
+    private void ZmenaNapeti(ChangeEventArgs e)
+    {
+        int.TryParse(e.Value.ToString(), out Napeti);
+        Vypocet();
+    }
+
+    // přidání rezistoru
+    private void Pridat()
+    {
+        if (Rezistory.Count < 5)
+        {
+            Rezistory.Add(10);
+            Vypocet();
+        }
+    }
+
+    // odebrání rezistoru
+    private void Odebrat(int index)
+    {
+        if (Rezistory.Count > 1)
+        {
+            Rezistory.RemoveAt(index);
+            Vypocet();
+        }
+    }
+
+    // sériově zapojené rezistory
+    private int Seriove()
+    {
+        int vypocet = 0;
+        foreach (int x in Rezistory)
+        {
+            vypocet += x;
+        }
+        return vypocet;
+    }
+    // paralelně zapojené rezistory
+    private double Paralelne()
+    {
+        double vypocet = 0;
+
+        for(int i=0; i<Rezistory.Count; i++)
+        {
+            vypocet += 1 / (float)Rezistory[i];
+        }
+        vypocet = Math.Round(1 / vypocet, 2);
+
+        return vypocet;
+    }
+
+    // výpočet proudu a celkového odporu
+    private void Vypocet()
+    {
+        if (Zapojeni == 0)
+        {
+            Odpor = Seriove();
+        }
+        else
+        {
+            Odpor = Paralelne();
+        }
+        Proud = Math.Round(((double)Napeti / (double)Odpor), 2);
+    }
+
+}

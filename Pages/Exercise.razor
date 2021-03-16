@@ -1,0 +1,132 @@
+﻿@page "/exercise"
+
+<div class="exercise-container">
+    <div class="zadani">
+        <div class="zadani-card">
+            @Zadani
+        </div>
+        <div class="info-text">
+            Zaokrouhlete na dvě desetinná místa
+        </div>
+    </div>
+    <div class="odpoved-container">
+        <div class="odpoved">
+            <input type="text" @bind-value="Odpoved" style="border:@spravneBorder"/>
+        </div>
+        <div class="vyhodnoceni">
+            <div class="vyhodnoceni-card" style="visibility:@vyhodnoceniVisible">
+                @SpravnaOdpoved
+            </div>
+        </div>
+        <button @onclick="Vyhodnotit">@buttonText</button>
+    </div>
+</div>
+
+@code {
+
+    string Zadani = "";
+    string Odpoved;
+    double SpravnaOdpoved;
+
+    // vyhodnocení
+    string vyhodnoceniVisible = "hidden";
+    string buttonText = "Vyhodnotit";
+    string spravneBorder = "none";
+    bool dalsi = false;
+
+
+    string[] Cisla = new string[] { "", "Dva","Tři","Čtyři" };
+    string[] TypyZapojeni = new string[] { "sériově", "paralelně" };
+
+    Random rnd = new Random();
+
+    protected override async Task OnInitializedAsync()
+    {
+        NoveZadani();
+    }
+
+    // sériově zapojené rezistory
+    private int Seriove(int[] rezistory)
+    {
+        int vypocet = 0;
+        foreach (int x in rezistory)
+        {
+            vypocet += x;
+        }
+        return vypocet;
+    }
+    // paralelně zapojené rezistory
+    private double Paralelne(int[] rezistory)
+    {
+        double vypocet = 0;
+
+        for (int i = 0; i < rezistory.Length; i++)
+        {
+            vypocet += 1 / (float)rezistory[i];
+        }
+        vypocet = Math.Round(1 / vypocet, 2);
+
+        return vypocet;
+    }
+
+    private string UlohaTypu1()
+    {
+        int pocet = rnd.Next(2,5);
+        int zapojeni = rnd.Next(2);
+        string zapojeniText;
+        string rezistoryText = "";
+        int[] rezistory = new int[pocet];
+
+        for(int i=0; i<pocet; i++)
+        {
+            rezistory[i] = rnd.Next(1, 10);
+        }
+
+        if (zapojeni == 0)
+        {
+            SpravnaOdpoved = Seriove(rezistory);
+            zapojeniText = "sériově";
+        }
+        else
+        {
+            SpravnaOdpoved = Paralelne(rezistory);
+            zapojeniText = "paralelně";
+        }
+
+        rezistoryText += string.Join(" Ω, ", rezistory);
+
+        return Cisla[pocet-1] + " rezistory o odporech " + rezistoryText + " Ω jsou spojeny " + zapojeniText + ". Určete celkový odpor rezistorů (v ohmech).";
+    }
+
+    private void NoveZadani()
+    {
+        Odpoved = "";
+        vyhodnoceniVisible = "hidden";
+        buttonText = "Vyhodnotit";
+        dalsi = false;
+        spravneBorder = "none";
+        Zadani = UlohaTypu1();
+    }
+
+    // vyhodnotit úlohu
+    private void Vyhodnotit()
+    {
+        if (dalsi)
+        {
+            NoveZadani();
+        }
+        else if(Convert.ToDouble(Odpoved) == SpravnaOdpoved)
+        {
+            buttonText = "Další";
+            spravneBorder = "solid 3px green";
+            dalsi = true;
+        }
+        else
+        {
+            vyhodnoceniVisible = "visible";
+            buttonText = "Další";
+            dalsi = true;
+        }
+    }
+
+}

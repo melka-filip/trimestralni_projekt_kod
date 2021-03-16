@@ -1,0 +1,41 @@
+﻿<div class="rezistor">
+    R<sub>@indicies[Index]</sub> = @Value Ω
+    <input type="range" min="1" max="50" value="@Value" @oninput="OnChange" />
+    <button @onclick="Odebrat"><i class="fas fa-trash-alt"></i></button>
+</div>
+
+@code {
+
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public int Index { get; set; } = 0;
+
+    int[] indicies = new int[] { 1, 2, 3, 4, 5 };
+
+    ///////////
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback ZmenaOdporu { get; set; }
+
+    private void OnChange(ChangeEventArgs e)
+    {
+        int odpor;
+        int.TryParse(e.Value.ToString(), out odpor);
+        ValueChanged.InvokeAsync(odpor);
+        ZmenaOdporu.InvokeAsync(1);
+    }
+
+    [Parameter]
+    public EventCallback<int> OdebratRezistor { get; set; }
+
+    private void Odebrat()
+    {
+        OdebratRezistor.InvokeAsync(Index);
+    }
+
+}

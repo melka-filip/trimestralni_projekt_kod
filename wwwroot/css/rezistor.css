@@ -1,0 +1,19 @@
+﻿.rezistor {
+    margin: 20px 0;
+    font-size: 20px;
+}
+.rezistor input[type="number"]{
+    width: 8ch;
+}
+
+.rezistor button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: rgb(75, 75, 75);
+    font-size: 20px;
+}
+.rezistor button:hover {
+    color: rgb(249, 75, 75);
+    cursor: pointer;
+}

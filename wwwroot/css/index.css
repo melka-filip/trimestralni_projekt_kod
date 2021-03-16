@@ -1,0 +1,85 @@
+﻿body {
+    margin: 0;
+    font-family: Arial;
+    background-color: #ECEBEB;
+}
+
+.main-container{
+    height: calc(100% - 50px);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 2fr;
+    grid-template-areas:
+        "n o"
+        "r o";
+}
+
+.rezistory {
+    grid-area: r;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+}
+
+.fa-tools {
+    font-size: 35px;
+    color: grey;
+}
+
+.napeti-proud {
+    grid-area: n;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    padding-left: 50px;
+}
+.napeti-proud h1{
+    align-self: flex-end;
+}
+.napeti-proud input{
+    align-self: flex-start;
+    width: 180px;
+}
+
+.odpory {
+    grid-area: o;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.odpory-card {
+    width: 300px;
+    height: 500px;
+    padding: 20px;
+    background-color: #F4F4F4;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.odpory-card h1{
+    padding-top: 20px;
+}
+.odpory-card button{
+    outline: none;
+    background-color: transparent;
+    border: none;
+}
+.odpory-card button:hover {
+    cursor: pointer;
+}
+
+#add-button {
+    outline: none;
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    color: rgba(75, 75, 75, .7);
+}
+#add-button:hover {
+    color: rgba(75, 75, 75, 1);
+    cursor: pointer;
+}
+
+
+
